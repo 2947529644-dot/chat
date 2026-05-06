@@ -13,7 +13,7 @@ defineProps<{
     class="message-bubble"
     :class="message.isMine ? 'outgoing' : 'incoming'"
   >
-    <!-- Sender info for group chat (non-mine messages) -->
+    <!-- Sender info for group chat -->
     <div v-if="showSender && !message.isMine" class="sender-info">
       <img
         :src="message.senderAvatar"
@@ -26,7 +26,7 @@ defineProps<{
     <!-- Message content -->
     <div class="message-content">
       <div class="bubble">
-        {{ message.content }}
+        <span class="text">{{ message.content }}</span>
       </div>
       <span class="timestamp">{{ formatTime(message.timestamp) }}</span>
     </div>
@@ -37,11 +37,12 @@ defineProps<{
 .message-bubble {
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--spacing-sm);
-  max-width: 70%;
+  margin-bottom: var(--spacing-xs);
+  max-width: 65%;
+  position: relative;
 }
 
-/* Incoming message (others) - left aligned */
+/* Incoming message - left aligned */
 .message-bubble.incoming {
   align-self: flex-start;
 }
@@ -51,17 +52,18 @@ defineProps<{
 }
 
 .message-bubble.incoming .bubble {
-  background-color: var(--color-canvas);
-  border-radius: 18px 18px 18px 4px;
+  background: var(--color-surface-pearl);
+  border-radius: var(--radius-4xl) var(--radius-4xl) var(--radius-4xl) var(--radius-md);
   color: var(--color-ink);
+  border: 0.5px solid var(--color-hairline);
 }
 
 .message-bubble.incoming .timestamp {
   align-self: flex-start;
-  margin-left: var(--spacing-xs);
+  padding-left: var(--spacing-md);
 }
 
-/* Outgoing message (mine) - right aligned */
+/* Outgoing message - right aligned */
 .message-bubble.outgoing {
   align-self: flex-end;
 }
@@ -71,54 +73,79 @@ defineProps<{
 }
 
 .message-bubble.outgoing .bubble {
-  background-color: var(--color-primary);
-  border-radius: 18px 18px 4px 18px;
+  background: var(--color-primary);
+  border-radius: var(--radius-4xl) var(--radius-4xl) var(--radius-md) var(--radius-4xl);
   color: var(--color-on-primary);
 }
 
 .message-bubble.outgoing .timestamp {
   align-self: flex-end;
-  margin-right: var(--spacing-xs);
+  padding-right: var(--spacing-md);
 }
 
 /* Sender info */
 .sender-info {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  margin-bottom: 4px;
+  gap: var(--spacing-sm);
+  margin-bottom: 6px;
+  padding-left: var(--spacing-lg);
 }
 
 .sender-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-pill);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   object-fit: cover;
+  border: 0.5px solid var(--color-divider);
 }
 
 .sender-name {
-  font-size: var(--font-size-fine-print);
-  color: var(--color-ink-muted-48);
+  font-family: var(--font-text);
+  font-size: var(--font-size-caption);
   font-weight: var(--font-weight-semibold);
+  color: var(--color-ink-secondary);
+  letter-spacing: var(--letter-spacing-caption);
 }
 
 /* Message content */
 .message-content {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .bubble {
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  position: relative;
+  max-width: 100%;
+}
+
+.text {
+  font-family: var(--font-text);
   font-size: var(--font-size-body);
-  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.35;
+  letter-spacing: var(--letter-spacing-body);
   word-wrap: break-word;
-  box-shadow: var(--shadow-message);
+  white-space: pre-wrap;
 }
 
 .timestamp {
-  font-size: var(--font-size-fine-print);
-  color: var(--color-ink-muted-48);
+  font-family: var(--font-text);
+  font-size: var(--font-size-caption2);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-ink-muted);
+  letter-spacing: var(--letter-spacing-caption);
+  margin-top: 2px;
+}
+
+/* Hover effect */
+.message-bubble.outgoing .bubble {
+  box-shadow: 0 1px 2px rgba(0, 113, 227, 0.15);
+}
+
+.message-bubble.incoming .bubble {
+  box-shadow: var(--shadow-subtle);
 }
 </style>

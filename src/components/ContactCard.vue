@@ -15,28 +15,28 @@ defineEmits<{
 <template>
   <div
     class="contact-card"
-    :class="{ 'contact-card--active': isActive }"
+    :class="{ 'is-active': isActive }"
     @click="$emit('click')"
   >
-    <div class="contact-card__avatar-wrapper">
+    <div class="avatar-wrapper">
       <img
         :src="contact.avatar"
         :alt="contact.name"
-        class="contact-card__avatar"
+        class="avatar"
       />
-      <span v-if="contact.isGroup" class="contact-card__group-badge">群</span>
+      <span v-if="contact.isGroup" class="group-badge">群</span>
     </div>
 
-    <div class="contact-card__content">
-      <div class="contact-card__header">
-        <span class="contact-card__name">{{ contact.name }}</span>
-        <span class="contact-card__time">{{ formatLastMessageTime(contact.lastMessageTime) }}</span>
+    <div class="content">
+      <div class="header">
+        <span class="name">{{ contact.name }}</span>
+        <span class="time">{{ formatLastMessageTime(contact.lastMessageTime) }}</span>
       </div>
-      <div class="contact-card__footer">
-        <span class="contact-card__message">{{ contact.lastMessage }}</span>
+      <div class="footer">
+        <span class="message">{{ contact.lastMessage }}</span>
         <span
           v-if="contact.unreadCount > 0"
-          class="contact-card__unread"
+          class="unread-badge"
         >
           {{ contact.unreadCount > 99 ? '99+' : contact.unreadCount }}
         </span>
@@ -48,104 +48,137 @@ defineEmits<{
 <style scoped>
 .contact-card {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-md);
+  margin: var(--spacing-xs) 0;
   cursor: pointer;
-  background-color: var(--bg-secondary, #f5f5f5);
-  border-left: 3px solid transparent;
-  transition: background-color 0.2s ease;
+  background: transparent;
+  border-radius: var(--radius-lg);
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.contact-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: var(--color-primary);
+  border-radius: 0 2px 2px 0;
+  transition: height var(--transition-normal);
 }
 
 .contact-card:hover {
-  background-color: var(--bg-hover, #ebebeb);
+  background: rgba(0, 0, 0, 0.03);
 }
 
-.contact-card--active {
-  background-color: var(--bg-active, #d9d9d9);
-  border-left-color: var(--primary-color, #07c160);
+.contact-card.is-active {
+  background: rgba(0, 113, 227, 0.08);
 }
 
-.contact-card__avatar-wrapper {
+.contact-card.is-active::before {
+  height: 24px;
+}
+
+.contact-card:active {
+  transform: scale(0.98);
+}
+
+.avatar-wrapper {
   position: relative;
   flex-shrink: 0;
 }
 
-.contact-card__avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 6px;
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-xl);
   object-fit: cover;
+  background: var(--color-surface-elevated);
 }
 
-.contact-card__group-badge {
+.group-badge {
   position: absolute;
   bottom: -2px;
   right: -2px;
-  padding: 1px 4px;
+  padding: 2px 5px;
+  font-family: var(--font-text);
   font-size: 10px;
-  color: var(--text-primary, #fff);
-  background-color: var(--primary-color, #07c160);
-  border-radius: 2px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-on-dark);
+  background: var(--color-surface-dark);
+  border-radius: var(--radius-xs);
+  border: 2px solid var(--color-canvas-parchment);
 }
 
-.contact-card__content {
+.content {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  padding-top: 2px;
 }
 
-.contact-card__header {
+.header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
+  gap: var(--spacing-sm);
 }
 
-.contact-card__name {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-primary, #191919);
+.name {
+  font-family: var(--font-text);
+  font-size: var(--font-size-subhead);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
-.contact-card__time {
+.time {
   flex-shrink: 0;
-  font-size: 12px;
-  color: var(--text-secondary, #b2b2b2);
-  margin-left: 8px;
+  font-family: var(--font-text);
+  font-size: var(--font-size-caption2);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-ink-muted);
 }
 
-.contact-card__footer {
+.footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--spacing-sm);
 }
 
-.contact-card__message {
+.message {
   flex: 1;
-  font-size: 13px;
-  color: var(--text-secondary, #b2b2b2);
+  font-family: var(--font-text);
+  font-size: var(--font-size-footnote);
+  color: var(--color-ink-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.contact-card__unread {
+.unread-badge {
   flex-shrink: 0;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  margin-left: 8px;
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 18px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  font-family: var(--font-text);
+  font-size: var(--font-size-caption2);
+  font-weight: var(--font-weight-semibold);
+  line-height: 20px;
   text-align: center;
-  color: var(--text-primary, #fff);
-  background-color: var(--danger-color, #f55858);
-  border-radius: 9px;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border-radius: 10px;
 }
 </style>

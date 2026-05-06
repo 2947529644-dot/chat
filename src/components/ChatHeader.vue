@@ -8,23 +8,26 @@ const chatStore = useChatStore()
   <header class="chat-header">
     <div v-if="chatStore.activeContact" class="header-content">
       <div class="contact-info">
-        <span class="contact-name">{{ chatStore.activeContact.name }}</span>
-        <span v-if="chatStore.activeContact.isGroup" class="member-count">
-          ({{ chatStore.activeContact.members?.length || 0 }} 位成员)
-        </span>
+        <img :src="chatStore.activeContact.avatar" :alt="chatStore.activeContact.name" class="avatar" />
+        <div class="info-text">
+          <span class="contact-name">{{ chatStore.activeContact.name }}</span>
+          <span v-if="chatStore.activeContact.isGroup" class="member-count">
+            {{ chatStore.activeContact.members?.length || 0 }} 位成员
+          </span>
+        </div>
       </div>
       <div class="actions">
         <button class="action-btn" title="搜索">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M20 20L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
         <button class="action-btn" title="更多">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="1"></circle>
-            <circle cx="12" cy="5" r="1"></circle>
-            <circle cx="12" cy="19" r="1"></circle>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="5" r="1.5" fill="currentColor"/>
+            <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+            <circle cx="12" cy="19" r="1.5" fill="currentColor"/>
           </svg>
         </button>
       </div>
@@ -37,12 +40,24 @@ const chatStore = useChatStore()
 
 <style scoped>
 .chat-header {
-  height: 52px;
+  height: 60px;
   display: flex;
   align-items: center;
-  padding: 0 var(--spacing-md);
-  background-color: var(--color-canvas);
-  border-bottom: 1px solid var(--color-divider-soft);
+  padding: 0 var(--spacing-3xl);
+  background: var(--color-canvas);
+  backdrop-filter: saturate(180%) blur(var(--blur-md));
+  -webkit-backdrop-filter: saturate(180%) blur(var(--blur-md));
+  position: relative;
+}
+
+.chat-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--spacing-3xl);
+  right: var(--spacing-3xl);
+  height: 0.5px;
+  background: var(--color-divider);
 }
 
 .header-content {
@@ -54,21 +69,38 @@ const chatStore = useChatStore()
 
 .contact-info {
   display: flex;
-  align-items: baseline;
-  gap: var(--spacing-xs);
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 0.5px solid var(--color-divider);
+}
+
+.info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .contact-name {
-  font-family: var(--font-text);
-  font-size: var(--font-size-body);
+  font-family: var(--font-display);
+  font-size: var(--font-size-headline);
   font-weight: var(--font-weight-semibold);
   color: var(--color-ink);
+  letter-spacing: var(--letter-spacing-headline);
+  line-height: var(--line-height-headline);
 }
 
 .member-count {
   font-family: var(--font-text);
-  font-size: var(--font-size-caption);
-  color: var(--color-ink-muted-48);
+  font-size: var(--font-size-footnote);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-ink-secondary);
 }
 
 .actions {
@@ -84,16 +116,20 @@ const chatStore = useChatStore()
   width: 32px;
   height: 32px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 50%;
   background: transparent;
-  color: var(--color-ink-muted-48);
+  color: var(--color-ink-secondary);
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .action-btn:hover {
-  background-color: var(--color-divider-soft);
+  background: rgba(0, 0, 0, 0.04);
   color: var(--color-ink);
+}
+
+.action-btn:active {
+  transform: scale(0.92);
 }
 
 .placeholder {
@@ -105,7 +141,8 @@ const chatStore = useChatStore()
 
 .placeholder-text {
   font-family: var(--font-text);
-  font-size: var(--font-size-body);
-  color: var(--color-ink-muted-48);
+  font-size: var(--font-size-subhead);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-ink-muted);
 }
 </style>
