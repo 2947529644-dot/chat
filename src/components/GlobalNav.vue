@@ -11,32 +11,36 @@ function handleSearch(event: Event) {
 
 <template>
   <nav class="nav">
-    <div class="nav-left">
+    <div class="nav-inner">
       <div class="logo">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
       </div>
-    </div>
 
-    <div class="nav-center">
-      <div class="search-box">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
-        </svg>
-        <input
-          type="text"
-          placeholder="搜索"
-          :value="chatStore.searchQuery"
-          @input="handleSearch"
-        />
+      <div class="search-container">
+        <div class="search">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input
+            type="text"
+            placeholder="搜索对话..."
+            :value="chatStore.searchQuery"
+            @input="handleSearch"
+          />
+        </div>
       </div>
-    </div>
 
-    <div class="nav-right">
-      <div class="avatar">
-        <img :src="chatStore.currentUser.avatar" :alt="chatStore.currentUser.name" />
+      <div class="user">
+        <div class="avatar">
+          <img :src="chatStore.currentUser.avatar" :alt="chatStore.currentUser.name" />
+        </div>
       </div>
     </div>
   </nav>
@@ -44,43 +48,74 @@ function handleSearch(event: Event) {
 
 <style scoped>
 .nav {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  padding: 0 var(--space-4);
-  background: var(--bg-primary);
-  border-bottom: 0.5px solid var(--border);
+  height: 64px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
+  border-bottom: var(--glass-border);
+  position: relative;
+  z-index: 50;
 }
 
-.nav-left {
-  width: 60px;
+.nav-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  color: var(--accent);
 }
 
-.nav-center {
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  border-radius: var(--radius-lg);
+  color: var(--text-on-dark);
+}
+
+.search-container {
   flex: 1;
   display: flex;
   justify-content: center;
+  padding: 0 var(--space-8);
 }
 
-.search-box {
+.search {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  width: 240px;
-  height: 28px;
-  padding: 0 var(--space-3);
-  background: var(--bg-secondary);
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 400px;
+  height: 40px;
+  padding: 0 var(--space-4);
+  background: var(--bg-muted);
   border-radius: var(--radius-full);
-  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: all var(--transition-base);
 }
 
-.search-box input {
+.search:focus-within {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.search-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.search input {
   flex: 1;
   border: none;
   background: none;
@@ -89,22 +124,28 @@ function handleSearch(event: Event) {
   outline: none;
 }
 
-.search-box input::placeholder {
-  color: var(--text-secondary);
+.search input::placeholder {
+  color: var(--text-muted);
 }
 
-.nav-right {
-  width: 60px;
+.user {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
 }
 
 .avatar {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-base);
+}
+
+.avatar:hover {
+  border-color: var(--accent);
+  transform: scale(1.05);
 }
 
 .avatar img {

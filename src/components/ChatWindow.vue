@@ -5,19 +5,19 @@ import InputArea from './InputArea.vue'
 </script>
 
 <template>
-  <div class="chat-window">
+  <main class="chat">
     <ChatHeader />
     <MessageList />
     <InputArea />
-  </div>
+  </main>
 </template>
 
 <style scoped>
-.chat-window {
+.chat {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
+  background: var(--bg-base);
   min-width: 0;
 }
 </style>

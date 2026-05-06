@@ -18,16 +18,19 @@ defineEmits<{
     :class="{ active: isActive }"
     @click="$emit('click')"
   >
-    <img :src="contact.avatar" :alt="contact.name" class="avatar" />
+    <div class="avatar">
+      <img :src="contact.avatar" :alt="contact.name" />
+      <span v-if="contact.isGroup" class="badge">群</span>
+    </div>
 
     <div class="content">
-      <div class="row">
+      <div class="row top">
         <span class="name">{{ contact.name }}</span>
         <span class="time">{{ formatLastMessageTime(contact.lastMessageTime) }}</span>
       </div>
-      <div class="row">
+      <div class="row bottom">
         <span class="message">{{ contact.lastMessage }}</span>
-        <span v-if="contact.unreadCount > 0" class="badge">
+        <span v-if="contact.unreadCount > 0" class="unread">
           {{ contact.unreadCount > 99 ? '99+' : contact.unreadCount }}
         </span>
       </div>
@@ -41,24 +44,61 @@ defineEmits<{
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
+  margin: var(--space-1) 0;
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  transition: background var(--transition);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+  transition: height var(--transition-base);
 }
 
 .card:hover {
-  background: var(--bg-secondary);
+  background: var(--bg-muted);
 }
 
 .card.active {
-  background: var(--bg-tertiary);
+  background: var(--bg-muted);
+}
+
+.card.active::before {
+  height: 24px;
 }
 
 .avatar {
-  width: 48px;
-  height: 48px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar img {
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0;
+}
+
+.avatar .badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  color: var(--text-on-dark);
+  background: var(--secondary);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--bg-elevated);
 }
 
 .content {
@@ -66,7 +106,7 @@ defineEmits<{
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-1);
 }
 
 .row {
@@ -78,7 +118,7 @@ defineEmits<{
 
 .name {
   font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--font-medium);
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -87,7 +127,7 @@ defineEmits<{
 
 .time {
   font-size: var(--text-xs);
-  color: var(--text-secondary);
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -99,13 +139,13 @@ defineEmits<{
   white-space: nowrap;
 }
 
-.badge {
+.unread {
   font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
-  color: white;
+  font-weight: var(--font-medium);
+  color: var(--text-on-dark);
   background: var(--accent);
-  padding: 2px 6px;
-  border-radius: 10px;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
   flex-shrink: 0;
 }
 </style>

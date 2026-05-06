@@ -9,11 +9,11 @@ defineProps<{
 </script>
 
 <template>
-  <div class="bubble" :class="message.isMine ? 'outgoing' : 'incoming'">
+  <div class="bubble" :class="{ outgoing: message.isMine }">
     <div v-if="showSender && !message.isMine" class="sender">
       <span class="sender-name">{{ message.senderName }}</span>
     </div>
-    <div class="content">
+    <div class="body">
       <div class="text">{{ message.content }}</div>
       <span class="time">{{ formatTime(message.timestamp) }}</span>
     </div>
@@ -24,64 +24,71 @@ defineProps<{
 .bubble {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  max-width: 65%;
+  gap: var(--space-1);
+  max-width: 60%;
+  animation: fadeIn 0.2s ease;
 }
 
-.incoming {
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bubble:not(.outgoing) {
   align-self: flex-start;
 }
 
-.outgoing {
+.bubble.outgoing {
   align-self: flex-end;
 }
 
 .sender {
-  padding-left: var(--space-3);
+  padding-left: var(--space-4);
 }
 
 .sender-name {
   font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
+  font-weight: var(--font-medium);
   color: var(--text-secondary);
 }
 
-.content {
+.body {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
-.incoming .content {
+.bubble:not(.outgoing) .body {
   align-items: flex-start;
 }
 
-.outgoing .content {
+.bubble.outgoing .body {
   align-items: flex-end;
 }
 
 .text {
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-base);
-  line-height: 1.4;
+  line-height: 1.45;
   word-wrap: break-word;
 }
 
-.incoming .text {
-  background: var(--bg-primary);
-  border-radius: var(--radius-xl) var(--radius-xl) var(--radius-xl) var(--radius-sm);
+.bubble:not(.outgoing) .text {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-2xl) var(--radius-2xl) var(--radius-2xl) var(--radius-sm);
   color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
 }
 
-.outgoing .text {
+.bubble.outgoing .text {
   background: var(--bubble-outgoing);
-  border-radius: var(--radius-xl) var(--radius-xl) var(--radius-sm) var(--radius-xl);
-  color: white;
+  border-radius: var(--radius-2xl) var(--radius-2xl) var(--radius-sm) var(--radius-2xl);
+  color: var(--text-on-dark);
 }
 
 .time {
   font-size: var(--text-xs);
-  color: var(--text-secondary);
+  color: var(--text-muted);
   padding: 0 var(--space-2);
 }
 </style>

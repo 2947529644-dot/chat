@@ -6,12 +6,17 @@ const chatStore = useChatStore()
 </script>
 
 <template>
-  <div class="contact-list">
-    <div class="header">
-      <h2 class="title">信息</h2>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1 class="title">消息</h1>
+      <button class="new-btn" title="新建对话">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
 
-    <div class="list">
+    <div class="contacts">
       <ContactCard
         v-for="contact in chatStore.filteredContacts"
         :key="contact.id"
@@ -21,42 +26,68 @@ const chatStore = useChatStore()
       />
 
       <div v-if="chatStore.filteredContacts.length === 0" class="empty">
-        没有找到联系人
+        <p>没有找到对话</p>
       </div>
     </div>
-  </div>
+  </aside>
 </template>
 
 <style scoped>
-.contact-list {
-  width: 280px;
+.sidebar {
+  width: 340px;
+  min-width: 340px;
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
-  border-right: 0.5px solid var(--border);
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--border);
 }
 
-.header {
-  padding: var(--space-4);
-  border-bottom: 0.5px solid var(--border);
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-6) var(--space-4);
 }
 
 .title {
-  margin: 0;
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
-.list {
+.new-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-muted);
+  border: none;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.new-btn:hover {
+  background: var(--primary);
+  color: var(--text-on-dark);
+  transform: scale(1.05);
+}
+
+.contacts {
   flex: 1;
   overflow-y: auto;
+  padding: var(--space-2);
 }
 
 .empty {
-  padding: var(--space-8);
-  text-align: center;
-  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  color: var(--text-muted);
   font-size: var(--text-sm);
 }
 </style>
