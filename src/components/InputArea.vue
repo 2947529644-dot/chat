@@ -4,223 +4,155 @@ import { useChatStore } from '@/stores/chat'
 import EmojiPicker from './EmojiPicker.vue'
 
 const chatStore = useChatStore()
-const inputValue = ref('')
-const showEmojiPicker = ref(false)
+const input = ref('')
+const showEmoji = ref(false)
 
-function handleSend() {
-  if (!inputValue.value.trim() || !chatStore.activeContact) return
-
-  chatStore.sendMessage(inputValue.value)
-  inputValue.value = ''
+function send() {
+  if (!input.value.trim() || !chatStore.activeContact) return
+  chatStore.sendMessage(input.value)
+  input.value = ''
 }
 
-function handleKeydown(event: KeyboardEvent) {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault()
-    handleSend()
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault()
+    send()
   }
 }
 
-function handleAttachment() {
-  console.log('Attachment clicked')
-}
-
-function toggleEmojiPicker() {
-  showEmojiPicker.value = !showEmojiPicker.value
-}
-
-function handleEmojiSelect(emoji: string) {
-  inputValue.value += emoji
-  showEmojiPicker.value = false
-}
-
-function closeEmojiPicker() {
-  showEmojiPicker.value = false
+function selectEmoji(emoji: string) {
+  input.value += emoji
+  showEmoji.value = false
 }
 </script>
 
 <template>
   <div class="input-area">
-    <div class="input-container">
-      <div class="toolbar">
-        <button
-          class="tool-btn"
-          @click="handleAttachment"
-          :disabled="!chatStore.activeContact"
-          title="添加附件"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
+    <button class="btn" :disabled="!chatStore.activeContact" title="附件">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+    </button>
 
-        <div class="emoji-wrapper">
-          <button
-            class="tool-btn"
-            @click="toggleEmojiPicker"
-            :disabled="!chatStore.activeContact"
-            title="表情"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M8 9C8.5 9 9 8.5 9 8C9 7.5 8.5 7 8 7C7.5 7 7 7.5 7 8C7 8.5 7.5 9 8 9Z" fill="currentColor"/>
-              <path d="M16 9C16.5 9 17 8.5 17 8C17 7.5 16.5 7 16 7C15.5 7 15 7.5 15 8C15 8.5 15.5 9 16 9Z" fill="currentColor"/>
-              <path d="M8 14C8 14 9.5 17 12 17C14.5 17 16 14 16 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <EmojiPicker
-            v-if="showEmojiPicker"
-            @select="handleEmojiSelect"
-          />
-        </div>
-      </div>
-
-      <input
-        v-model="inputValue"
-        type="text"
-        class="input-field"
-        placeholder="信息"
-        :disabled="!chatStore.activeContact"
-        @keydown="handleKeydown"
-        @focus="closeEmojiPicker"
-      />
-
-      <button
-        class="send-btn"
-        @click="handleSend"
-        :disabled="!inputValue.trim() || !chatStore.activeContact"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <div class="emoji-wrap">
+      <button class="btn" @click="showEmoji = !showEmoji" :disabled="!chatStore.activeContact" title="表情">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+          <circle cx="9" cy="9" r="1" fill="currentColor"/>
+          <circle cx="15" cy="9" r="1" fill="currentColor"/>
         </svg>
       </button>
+      <EmojiPicker v-if="showEmoji" @select="selectEmoji" />
     </div>
+
+    <input
+      v-model="input"
+      type="text"
+      placeholder="信息"
+      :disabled="!chatStore.activeContact"
+      @keydown="onKeydown"
+      @focus="showEmoji = false"
+    />
+
+    <button
+      class="send-btn"
+      :disabled="!input.trim() || !chatStore.activeContact"
+      @click="send"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+      </svg>
+    </button>
   </div>
 </template>
 
 <style scoped>
 .input-area {
-  padding: var(--spacing-md) var(--spacing-2xl) var(--spacing-xl);
-  background: var(--color-canvas);
-  position: relative;
-}
-
-.input-area::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: var(--spacing-3xl);
-  right: var(--spacing-3xl);
-  height: 0.5px;
-  background: var(--color-divider);
-}
-
-.input-container {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  background: var(--color-surface-pearl);
-  border-radius: var(--radius-3xl);
-  padding: var(--spacing-xs);
-  border: 0.5px solid var(--color-divider);
-  transition: all var(--transition-normal);
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-primary);
+  border-top: 0.5px solid var(--border);
 }
 
-.input-container:focus-within {
-  background: var(--color-canvas);
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
-}
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding-left: var(--spacing-xs);
-}
-
-.tool-btn {
+.btn {
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
   border: none;
-  background: transparent;
-  color: var(--color-ink-secondary);
-  cursor: pointer;
+  background: none;
+  color: var(--text-secondary);
   border-radius: 50%;
-  transition: all var(--transition-fast);
+  cursor: pointer;
+  transition: all var(--transition);
 }
 
-.tool-btn:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--color-ink);
+.btn:hover:not(:disabled) {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
-.tool-btn:active:not(:disabled) {
-  transform: scale(0.92);
-}
-
-.tool-btn:disabled {
-  opacity: 0.3;
+.btn:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-.emoji-wrapper {
+.emoji-wrap {
   position: relative;
 }
 
-.input-field {
+input {
   flex: 1;
   height: 36px;
-  background: transparent;
+  padding: 0 var(--space-3);
   border: none;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  font-size: var(--text-base);
+  color: var(--text-primary);
   outline: none;
-  font-family: var(--font-text);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-ink);
-  letter-spacing: var(--letter-spacing-body);
+  transition: all var(--transition);
 }
 
-.input-field::placeholder {
-  color: var(--color-ink-muted);
+input:focus {
+  background: var(--bg-tertiary);
 }
 
-.input-field:disabled {
+input::placeholder {
+  color: var(--text-secondary);
+}
+
+input:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 .send-btn {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
   border: none;
   border-radius: 50%;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--accent);
+  color: white;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  flex-shrink: 0;
+  transition: all var(--transition);
 }
 
 .send-btn:hover:not(:disabled) {
-  background: var(--color-primary-hover);
+  background: var(--accent-hover);
   transform: scale(1.05);
 }
 
-.send-btn:active:not(:disabled) {
-  transform: scale(0.95);
-}
-
 .send-btn:disabled {
-  background: var(--color-surface-elevated);
-  color: var(--color-ink-muted);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
   cursor: not-allowed;
 }
 </style>

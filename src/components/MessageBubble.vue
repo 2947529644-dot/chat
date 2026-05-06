@@ -9,143 +9,79 @@ defineProps<{
 </script>
 
 <template>
-  <div
-    class="message-bubble"
-    :class="message.isMine ? 'outgoing' : 'incoming'"
-  >
-    <!-- Sender info for group chat -->
-    <div v-if="showSender && !message.isMine" class="sender-info">
-      <img
-        :src="message.senderAvatar"
-        :alt="message.senderName"
-        class="sender-avatar"
-      />
+  <div class="bubble" :class="message.isMine ? 'outgoing' : 'incoming'">
+    <div v-if="showSender && !message.isMine" class="sender">
       <span class="sender-name">{{ message.senderName }}</span>
     </div>
-
-    <!-- Message content -->
-    <div class="message-content">
-      <div class="bubble">
-        <span class="text">{{ message.content }}</span>
-      </div>
-      <span class="timestamp">{{ formatTime(message.timestamp) }}</span>
+    <div class="content">
+      <div class="text">{{ message.content }}</div>
+      <span class="time">{{ formatTime(message.timestamp) }}</span>
     </div>
   </div>
 </template>
 
 <style scoped>
-.message-bubble {
+.bubble {
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--spacing-xs);
+  gap: 4px;
   max-width: 65%;
-  position: relative;
 }
 
-/* Incoming message - left aligned */
-.message-bubble.incoming {
+.incoming {
   align-self: flex-start;
 }
 
-.message-bubble.incoming .message-content {
-  align-items: flex-start;
-}
-
-.message-bubble.incoming .bubble {
-  background: var(--color-surface-pearl);
-  border-radius: var(--radius-4xl) var(--radius-4xl) var(--radius-4xl) var(--radius-md);
-  color: var(--color-ink);
-  border: 0.5px solid var(--color-hairline);
-}
-
-.message-bubble.incoming .timestamp {
-  align-self: flex-start;
-  padding-left: var(--spacing-md);
-}
-
-/* Outgoing message - right aligned */
-.message-bubble.outgoing {
+.outgoing {
   align-self: flex-end;
 }
 
-.message-bubble.outgoing .message-content {
-  align-items: flex-end;
-}
-
-.message-bubble.outgoing .bubble {
-  background: var(--color-primary);
-  border-radius: var(--radius-4xl) var(--radius-4xl) var(--radius-md) var(--radius-4xl);
-  color: var(--color-on-primary);
-}
-
-.message-bubble.outgoing .timestamp {
-  align-self: flex-end;
-  padding-right: var(--spacing-md);
-}
-
-/* Sender info */
-.sender-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: 6px;
-  padding-left: var(--spacing-lg);
-}
-
-.sender-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 0.5px solid var(--color-divider);
+.sender {
+  padding-left: var(--space-3);
 }
 
 .sender-name {
-  font-family: var(--font-text);
-  font-size: var(--font-size-caption);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-ink-secondary);
-  letter-spacing: var(--letter-spacing-caption);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
 }
 
-/* Message content */
-.message-content {
+.content {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
-.bubble {
-  padding: var(--spacing-sm) var(--spacing-lg);
-  position: relative;
-  max-width: 100%;
+.incoming .content {
+  align-items: flex-start;
+}
+
+.outgoing .content {
+  align-items: flex-end;
 }
 
 .text {
-  font-family: var(--font-text);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-regular);
-  line-height: 1.35;
-  letter-spacing: var(--letter-spacing-body);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  line-height: 1.4;
   word-wrap: break-word;
-  white-space: pre-wrap;
 }
 
-.timestamp {
-  font-family: var(--font-text);
-  font-size: var(--font-size-caption2);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-ink-muted);
-  letter-spacing: var(--letter-spacing-caption);
-  margin-top: 2px;
+.incoming .text {
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl) var(--radius-xl) var(--radius-xl) var(--radius-sm);
+  color: var(--text-primary);
 }
 
-/* Hover effect */
-.message-bubble.outgoing .bubble {
-  box-shadow: 0 1px 2px rgba(0, 113, 227, 0.15);
+.outgoing .text {
+  background: var(--bubble-outgoing);
+  border-radius: var(--radius-xl) var(--radius-xl) var(--radius-sm) var(--radius-xl);
+  color: white;
 }
 
-.message-bubble.incoming .bubble {
-  box-shadow: var(--shadow-subtle);
+.time {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  padding: 0 var(--space-2);
 }
 </style>

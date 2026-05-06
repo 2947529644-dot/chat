@@ -14,30 +14,20 @@ defineEmits<{
 
 <template>
   <div
-    class="contact-card"
-    :class="{ 'is-active': isActive }"
+    class="card"
+    :class="{ active: isActive }"
     @click="$emit('click')"
   >
-    <div class="avatar-wrapper">
-      <img
-        :src="contact.avatar"
-        :alt="contact.name"
-        class="avatar"
-      />
-      <span v-if="contact.isGroup" class="group-badge">群</span>
-    </div>
+    <img :src="contact.avatar" :alt="contact.name" class="avatar" />
 
     <div class="content">
-      <div class="header">
+      <div class="row">
         <span class="name">{{ contact.name }}</span>
         <span class="time">{{ formatLastMessageTime(contact.lastMessageTime) }}</span>
       </div>
-      <div class="footer">
+      <div class="row">
         <span class="message">{{ contact.lastMessage }}</span>
-        <span
-          v-if="contact.unreadCount > 0"
-          class="unread-badge"
-        >
+        <span v-if="contact.unreadCount > 0" class="badge">
           {{ contact.unreadCount > 99 ? '99+' : contact.unreadCount }}
         </span>
       </div>
@@ -46,73 +36,29 @@ defineEmits<{
 </template>
 
 <style scoped>
-.contact-card {
+.card {
   display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-md);
-  margin: var(--spacing-xs) 0;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   cursor: pointer;
-  background: transparent;
-  border-radius: var(--radius-lg);
-  position: relative;
-  transition: all var(--transition-fast);
+  transition: background var(--transition);
 }
 
-.contact-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 0;
-  background: var(--color-primary);
-  border-radius: 0 2px 2px 0;
-  transition: height var(--transition-normal);
+.card:hover {
+  background: var(--bg-secondary);
 }
 
-.contact-card:hover {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-.contact-card.is-active {
-  background: rgba(0, 113, 227, 0.08);
-}
-
-.contact-card.is-active::before {
-  height: 24px;
-}
-
-.contact-card:active {
-  transform: scale(0.98);
-}
-
-.avatar-wrapper {
-  position: relative;
-  flex-shrink: 0;
+.card.active {
+  background: var(--bg-tertiary);
 }
 
 .avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-xl);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   object-fit: cover;
-  background: var(--color-surface-elevated);
-}
-
-.group-badge {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  padding: 2px 5px;
-  font-family: var(--font-text);
-  font-size: 10px;
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-dark);
-  background: var(--color-surface-dark);
-  border-radius: var(--radius-xs);
-  border: 2px solid var(--color-canvas-parchment);
+  flex-shrink: 0;
 }
 
 .content {
@@ -120,65 +66,46 @@ defineEmits<{
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding-top: 2px;
+  gap: 2px;
 }
 
-.header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--spacing-sm);
-}
-
-.name {
-  font-family: var(--font-text);
-  font-size: var(--font-size-subhead);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-ink);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  letter-spacing: -0.01em;
-}
-
-.time {
-  flex-shrink: 0;
-  font-family: var(--font-text);
-  font-size: var(--font-size-caption2);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-ink-muted);
-}
-
-.footer {
+.row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-sm);
+  gap: var(--space-2);
 }
 
-.message {
-  flex: 1;
-  font-family: var(--font-text);
-  font-size: var(--font-size-footnote);
-  color: var(--color-ink-secondary);
+.name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.unread-badge {
+.time {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
   flex-shrink: 0;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  font-family: var(--font-text);
-  font-size: var(--font-size-caption2);
-  font-weight: var(--font-weight-semibold);
-  line-height: 20px;
-  text-align: center;
-  color: var(--color-on-primary);
-  background: var(--color-primary);
+}
+
+.message {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: white;
+  background: var(--accent);
+  padding: 2px 6px;
   border-radius: 10px;
+  flex-shrink: 0;
 }
 </style>

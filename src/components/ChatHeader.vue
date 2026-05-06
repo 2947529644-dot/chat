@@ -5,144 +5,98 @@ const chatStore = useChatStore()
 </script>
 
 <template>
-  <header class="chat-header">
-    <div v-if="chatStore.activeContact" class="header-content">
-      <div class="contact-info">
-        <img :src="chatStore.activeContact.avatar" :alt="chatStore.activeContact.name" class="avatar" />
-        <div class="info-text">
-          <span class="contact-name">{{ chatStore.activeContact.name }}</span>
-          <span v-if="chatStore.activeContact.isGroup" class="member-count">
-            {{ chatStore.activeContact.members?.length || 0 }} 位成员
-          </span>
-        </div>
+  <header class="header">
+    <div v-if="chatStore.activeContact" class="content">
+      <div class="info">
+        <span class="name">{{ chatStore.activeContact.name }}</span>
+        <span v-if="chatStore.activeContact.isGroup" class="members">
+          {{ chatStore.activeContact.members?.length || 0 }} 人
+        </span>
       </div>
       <div class="actions">
-        <button class="action-btn" title="搜索">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M20 20L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <button class="btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
           </svg>
         </button>
-        <button class="action-btn" title="更多">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="5" r="1.5" fill="currentColor"/>
-            <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
-            <circle cx="12" cy="19" r="1.5" fill="currentColor"/>
+        <button class="btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="5" r="2"/>
+            <circle cx="12" cy="12" r="2"/>
+            <circle cx="12" cy="19" r="2"/>
           </svg>
         </button>
       </div>
     </div>
     <div v-else class="placeholder">
-      <span class="placeholder-text">选择联系人开始聊天</span>
+      选择联系人开始聊天
     </div>
   </header>
 </template>
 
 <style scoped>
-.chat-header {
-  height: 60px;
+.header {
+  height: 56px;
   display: flex;
   align-items: center;
-  padding: 0 var(--spacing-3xl);
-  background: var(--color-canvas);
-  backdrop-filter: saturate(180%) blur(var(--blur-md));
-  -webkit-backdrop-filter: saturate(180%) blur(var(--blur-md));
-  position: relative;
+  padding: 0 var(--space-4);
+  background: var(--bg-primary);
+  border-bottom: 0.5px solid var(--border);
 }
 
-.chat-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: var(--spacing-3xl);
-  right: var(--spacing-3xl);
-  height: 0.5px;
-  background: var(--color-divider);
-}
-
-.header-content {
+.content {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
 }
 
-.contact-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 0.5px solid var(--color-divider);
-}
-
-.info-text {
+.info {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.contact-name {
-  font-family: var(--font-display);
-  font-size: var(--font-size-headline);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-ink);
-  letter-spacing: var(--letter-spacing-headline);
-  line-height: var(--line-height-headline);
+.name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
 }
 
-.member-count {
-  font-family: var(--font-text);
-  font-size: var(--font-size-footnote);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-ink-secondary);
+.members {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }
 
 .actions {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--space-2);
 }
 
-.action-btn {
+.btn {
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
   border: none;
+  background: none;
+  color: var(--text-secondary);
   border-radius: 50%;
-  background: transparent;
-  color: var(--color-ink-secondary);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--transition);
 }
 
-.action-btn:hover {
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--color-ink);
-}
-
-.action-btn:active {
-  transform: scale(0.92);
+.btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-}
-
-.placeholder-text {
-  font-family: var(--font-text);
-  font-size: var(--font-size-subhead);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-ink-muted);
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
 }
 </style>
