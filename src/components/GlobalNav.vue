@@ -28,7 +28,7 @@ function handleSearch(event: Event) {
         </svg>
         <input
           type="text"
-          placeholder="Search contacts..."
+          placeholder="搜索联系人..."
           :value="chatStore.searchQuery"
           @input="handleSearch"
           class="search-input"
@@ -40,7 +40,7 @@ function handleSearch(event: Event) {
       <div class="user-avatar">
         <img :src="chatStore.currentUser.avatar" :alt="chatStore.currentUser.name" />
       </div>
-      <button class="settings-btn" title="Settings">
+      <button class="settings-btn" title="设置">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
           <path d="M12 1V4M12 20V23M4.22 4.22L6.34 6.34M17.66 17.66L19.78 19.78M1 12H4M20 12H23M4.22 19.78L6.34 17.66M17.66 6.34L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>

@@ -10,17 +10,17 @@ const chatStore = useChatStore()
       <div class="contact-info">
         <span class="contact-name">{{ chatStore.activeContact.name }}</span>
         <span v-if="chatStore.activeContact.isGroup" class="member-count">
-          ({{ chatStore.activeContact.members?.length || 0 }} members)
+          ({{ chatStore.activeContact.members?.length || 0 }} 位成员)
         </span>
       </div>
       <div class="actions">
-        <button class="action-btn" title="Search">
+        <button class="action-btn" title="搜索">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.3-4.3"></path>
           </svg>
         </button>
-        <button class="action-btn" title="More options">
+        <button class="action-btn" title="更多">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="1"></circle>
             <circle cx="12" cy="5" r="1"></circle>
@@ -30,7 +30,7 @@ const chatStore = useChatStore()
       </div>
     </div>
     <div v-else class="placeholder">
-      <span class="placeholder-text">Select a chat to start messaging</span>
+      <span class="placeholder-text">选择联系人开始聊天</span>
     </div>
   </header>
 </template>

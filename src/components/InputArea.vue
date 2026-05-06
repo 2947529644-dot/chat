@@ -59,7 +59,7 @@ function handleEmoji() {
       v-model="inputValue"
       type="text"
       class="input-field"
-      placeholder="Type a message..."
+      placeholder="输入消息..."
       :disabled="!chatStore.activeContact"
       @keydown="handleKeydown"
     />
@@ -69,7 +69,7 @@ function handleEmoji() {
       @click="handleSend"
       :disabled="!inputValue.trim() || !chatStore.activeContact"
     >
-      Send
+      发送
     </button>
   </div>
 </template>
