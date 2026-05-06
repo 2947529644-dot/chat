@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useChatStore } from '@/stores/chat'
+import EmojiPicker from './EmojiPicker.vue'
 
 const chatStore = useChatStore()
 const inputValue = ref('')
+const showEmojiPicker = ref(false)
 
 function handleSend() {
   if (!inputValue.value.trim() || !chatStore.activeContact) return
@@ -24,9 +26,17 @@ function handleAttachment() {
   console.log('Attachment clicked')
 }
 
-function handleEmoji() {
-  // TODO: Implement emoji picker functionality
-  console.log('Emoji clicked')
+function toggleEmojiPicker() {
+  showEmojiPicker.value = !showEmojiPicker.value
+}
+
+function handleEmojiSelect(emoji: string) {
+  inputValue.value += emoji
+  showEmojiPicker.value = false
+}
+
+function closeEmojiPicker() {
+  showEmojiPicker.value = false
 }
 </script>
 
@@ -42,18 +52,24 @@ function handleEmoji() {
       </svg>
     </button>
 
-    <button
-      class="icon-btn"
-      @click="handleEmoji"
-      :disabled="!chatStore.activeContact"
-    >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-        <path d="M8 9C8.5 9 9 8.5 9 8C9 7.5 8.5 7 8 7C7.5 7 7 7.5 7 8C7 8.5 7.5 9 8 9Z" fill="currentColor"/>
-        <path d="M16 9C16.5 9 17 8.5 17 8C17 7.5 16.5 7 16 7C15.5 7 15 7.5 15 8C15 8.5 15.5 9 16 9Z" fill="currentColor"/>
-        <path d="M8 14C8 14 9.5 17 12 17C14.5 17 16 14 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
+    <div class="emoji-wrapper">
+      <button
+        class="icon-btn"
+        @click="toggleEmojiPicker"
+        :disabled="!chatStore.activeContact"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M8 9C8.5 9 9 8.5 9 8C9 7.5 8.5 7 8 7C7.5 7 7 7.5 7 8C7 8.5 7.5 9 8 9Z" fill="currentColor"/>
+          <path d="M16 9C16.5 9 17 8.5 17 8C17 7.5 16.5 7 16 7C15.5 7 15 7.5 15 8C15 8.5 15.5 9 16 9Z" fill="currentColor"/>
+          <path d="M8 14C8 14 9.5 17 12 17C14.5 17 16 14 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <EmojiPicker
+        v-if="showEmojiPicker"
+        @select="handleEmojiSelect"
+      />
+    </div>
 
     <input
       v-model="inputValue"
@@ -62,6 +78,7 @@ function handleEmoji() {
       placeholder="输入消息..."
       :disabled="!chatStore.activeContact"
       @keydown="handleKeydown"
+      @focus="closeEmojiPicker"
     />
 
     <button
@@ -107,6 +124,10 @@ function handleEmoji() {
 .icon-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.emoji-wrapper {
+  position: relative;
 }
 
 .input-field {
