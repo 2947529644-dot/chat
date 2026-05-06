@@ -1,0 +1,56 @@
+:root {
+  /* Surface colors */
+  --color-surface-black: #000000;
+  --color-canvas-parchment: #f5f5f7;
+  --color-canvas: #ffffff;
+  --color-surface-pearl: #fafafc;
+
+  /* Interactive colors */
+  --color-primary: #0066cc;
+  --color-primary-focus: #0071e3;
+
+  /* Text colors */
+  --color-ink: #1d1d1f;
+  --color-ink-muted-48: #7a7a7a;
+  --color-on-primary: #ffffff;
+  --color-on-dark: #ffffff;
+
+  /* Border colors */
+  --color-divider-soft: #f0f0f0;
+  --color-hairline: #e0e0e0;
+
+  /* Typography */
+  --font-display: "Inter", "SF Pro Display", system-ui, -apple-system, sans-serif;
+  --font-text: "Inter", "SF Pro Text", system-ui, -apple-system, sans-serif;
+
+  /* Font sizes */
+  --font-size-tagline: 21px;
+  --font-size-body: 17px;
+  --font-size-caption: 14px;
+  --font-size-fine-print: 12px;
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+
+  /* Line heights */
+  --line-height-tight: 1.19;
+  --line-height-normal: 1.47;
+
+  /* Letter spacing */
+  --letter-spacing-tight: -0.374px;
+
+  /* Spacing */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+
+  /* Border radius */
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-message: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
