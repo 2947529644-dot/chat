@@ -6,6 +6,7 @@ import EmojiPicker from './EmojiPicker.vue'
 const chatStore = useChatStore()
 const input = ref('')
 const showEmoji = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
 
 function send() {
   if (!input.value.trim() || !chatStore.activeContact) return
@@ -24,16 +25,61 @@ function selectEmoji(emoji: string) {
   input.value += emoji
   showEmoji.value = false
 }
+
+function triggerFileInput() {
+  fileInput.value?.click()
+}
+
+function handleFileSelect(e: Event) {
+  const target = e.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file || !chatStore.activeContact) return
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    const result = reader.result as string
+
+    // Determine file type
+    let type: 'image' | 'video' | 'file' = 'file'
+    if (file.type.startsWith('image/')) {
+      type = 'image'
+    } else if (file.type.startsWith('video/')) {
+      type = 'video'
+    }
+
+    chatStore.sendMediaMessage({
+      content: type === 'file' ? file.name : '',
+      type,
+      fileName: file.name,
+      fileSize: file.size,
+      fileUrl: result,
+      thumbnailUrl: type === 'image' ? result : undefined
+    })
+
+    // Reset input
+    if (fileInput.value) {
+      fileInput.value.value = ''
+    }
+  }
+  reader.readAsDataURL(file)
+}
 </script>
 
 <template>
   <div class="input-area">
     <div class="input-wrapper">
-      <button class="tool-btn" :disabled="!chatStore.activeContact" title="附件">
+      <button class="tool-btn" :disabled="!chatStore.activeContact" title="附件" @click="triggerFileInput">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path d="M21.44 11.05L12.25 20.24C11.1242 21.3658 9.59718 21.9983 8.005 21.9983C6.41282 21.9983 4.88584 21.3658 3.76 20.24C2.63416 19.1142 2.00166 17.5872 2.00166 15.995C2.00166 14.4028 2.63416 12.8758 3.76 11.75L12.33 3.18C13.0806 2.42975 14.0991 2.00629 15.16 2.00629C16.2209 2.00629 17.2394 2.42975 17.99 3.18C18.7403 3.93064 19.1637 4.94913 19.1637 6.01C19.1637 7.07087 18.7403 8.08936 17.99 8.84L9.41 17.41C9.03472 17.7853 8.52621 17.9956 7.995 17.9956C7.46379 17.9956 6.95528 17.7853 6.58 17.41C6.20472 17.0347 5.99443 16.5262 5.99443 15.995C5.99443 15.4638 6.20472 14.9553 6.58 14.58L15.07 6.1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
+      <input
+        ref="fileInput"
+        type="file"
+        accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.zip,.rar"
+        style="display: none"
+        @change="handleFileSelect"
+      />
 
       <div class="emoji-wrapper">
         <button class="tool-btn" @click="showEmoji = !showEmoji" :disabled="!chatStore.activeContact" title="表情">
@@ -114,7 +160,7 @@ function selectEmoji(emoji: string) {
   position: relative;
 }
 
-input {
+input[type="text"] {
   flex: 1;
   height: 36px;
   background: transparent;
@@ -124,11 +170,11 @@ input {
   outline: none;
 }
 
-input::placeholder {
+input[type="text"]::placeholder {
   color: var(--text-muted);
 }
 
-input:disabled {
+input[type="text"]:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

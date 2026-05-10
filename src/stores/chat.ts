@@ -33,11 +33,39 @@ export const useChatStore = defineStore('chat', () => {
   // Actions
   function selectContact(contactId: string): void {
     activeContactId.value = contactId
-    // Clear unread count when selecting a contact
+    // Clear unread count and mark messages as read
     const contact = contacts.value.find(c => c.id === contactId)
     if (contact) {
       contact.unreadCount = 0
+      markMessagesAsRead(contactId)
     }
+  }
+
+  function markMessagesAsRead(contactId: string): void {
+    const msgs = messages.value[contactId]
+    if (msgs) {
+      msgs.forEach(msg => {
+        if (!msg.isMine && !msg.isRead) {
+          msg.isRead = true
+          msg.readAt = new Date()
+        }
+      })
+    }
+  }
+
+  function addContact(contact: Omit<Contact, 'id' | 'lastMessage' | 'lastMessageTime' | 'unreadCount'>): void {
+    const newContact: Contact = {
+      id: `contact-${Date.now()}`,
+      name: contact.name,
+      avatar: contact.avatar,
+      isGroup: contact.isGroup,
+      members: contact.members,
+      lastMessage: '',
+      lastMessageTime: new Date(),
+      unreadCount: 0
+    }
+    contacts.value.unshift(newContact)
+    messages.value[newContact.id] = []
   }
 
   function sendMessage(content: string): void {
@@ -55,18 +83,59 @@ export const useChatStore = defineStore('chat', () => {
       isMine: true
     }
 
-    // Add message to the conversation
-    if (!messages.value[activeContactId.value]) {
-      messages.value[activeContactId.value] = []
+    addMessage(newMessage)
+  }
+
+  function sendMediaMessage(options: {
+    content: string
+    type: 'image' | 'video' | 'file'
+    fileName?: string
+    fileSize?: number
+    fileUrl?: string
+    thumbnailUrl?: string
+  }): void {
+    if (!activeContactId.value) return
+
+    const newMessage: Message = {
+      id: `msg-${Date.now()}`,
+      contactId: activeContactId.value,
+      senderId: currentUser.value.id,
+      senderName: currentUser.value.name,
+      senderAvatar: currentUser.value.avatar,
+      content: options.content,
+      type: options.type,
+      fileName: options.fileName,
+      fileSize: options.fileSize,
+      fileUrl: options.fileUrl,
+      thumbnailUrl: options.thumbnailUrl,
+      timestamp: new Date(),
+      isMine: true
     }
-    messages.value[activeContactId.value].push(newMessage)
+
+    addMessage(newMessage)
+  }
+
+  function addMessage(message: Message): void {
+    if (!messages.value[message.contactId]) {
+      messages.value[message.contactId] = []
+    }
+    messages.value[message.contactId].push(message)
 
     // Update last message in contact
-    const contact = contacts.value.find(c => c.id === activeContactId.value)
+    const contact = contacts.value.find(c => c.id === message.contactId)
     if (contact) {
-      contact.lastMessage = content.trim()
+      contact.lastMessage = message.type === 'text' ? message.content : `[${getMessageTypeLabel(message.type)}]`
       contact.lastMessageTime = new Date()
     }
+  }
+
+  function getMessageTypeLabel(type: Message['type']): string {
+    const labels: Record<string, string> = {
+      image: '图片',
+      video: '视频',
+      file: '文件'
+    }
+    return labels[type] || '消息'
   }
 
   function setSearchQuery(query: string): void {
@@ -87,6 +156,9 @@ export const useChatStore = defineStore('chat', () => {
     // Actions
     selectContact,
     sendMessage,
-    setSearchQuery
+    sendMediaMessage,
+    setSearchQuery,
+    addContact,
+    markMessagesAsRead
   }
 })

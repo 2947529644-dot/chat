@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import { useChatStore } from '@/stores/chat'
+import { useSettingsStore } from '@/stores/settings'
 
 const chatStore = useChatStore()
+const settingsStore = useSettingsStore()
+
+function openProfile() {
+  if (chatStore.activeContact) {
+    settingsStore.openProfile(chatStore.activeContact.id)
+  }
+}
 </script>
 
 <template>
   <header class="header">
     <div v-if="chatStore.activeContact" class="content">
-      <div class="info">
+      <div class="info" @click="openProfile">
         <div class="avatar">
           <img :src="chatStore.activeContact.avatar" :alt="chatStore.activeContact.name" />
         </div>
@@ -61,6 +69,12 @@ const chatStore = useChatStore()
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  cursor: pointer;
+  transition: opacity var(--transition-base);
+}
+
+.info:hover {
+  opacity: 0.8;
 }
 
 .avatar {

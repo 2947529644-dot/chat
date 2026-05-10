@@ -15,7 +15,17 @@ defineProps<{
     </div>
     <div class="body">
       <div class="text">{{ message.content }}</div>
-      <span class="time">{{ formatTime(message.timestamp) }}</span>
+      <div class="meta">
+        <span class="time">{{ formatTime(message.timestamp) }}</span>
+        <span v-if="message.isMine" class="read-status" :class="{ read: message.isRead }">
+          <svg v-if="message.isRead" width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -86,9 +96,25 @@ defineProps<{
   color: var(--text-on-dark);
 }
 
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
 .time {
   font-size: var(--text-xs);
   color: var(--text-muted);
   padding: 0 var(--space-2);
+}
+
+.read-status {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.read-status.read {
+  color: var(--accent);
 }
 </style>

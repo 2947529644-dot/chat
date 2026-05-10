@@ -86,9 +86,23 @@ export const mockMessages: Record<string, Message[]> = {
       senderId: 'contact-1',
       senderName: '张小雨',
       senderAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice',
-      content: '很好！我们明天还是老地方见吧？',
+      content: '很好！看这张照片，昨天去公园拍的',
       type: 'text',
-      timestamp: new Date(Date.now() - 1000 * 60 * 7),
+      timestamp: new Date(Date.now() - 1000 * 60 * 8),
+      isMine: false
+    },
+    {
+      id: 'msg-1-3-img',
+      contactId: 'contact-1',
+      senderId: 'contact-1',
+      senderName: '张小雨',
+      senderAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice',
+      content: '',
+      type: 'image',
+      fileName: 'park_photo.jpg',
+      fileSize: 245678,
+      fileUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop',
+      timestamp: new Date(Date.now() - 1000 * 60 * 7.5),
       isMine: false
     },
     {
@@ -97,9 +111,9 @@ export const mockMessages: Record<string, Message[]> = {
       senderId: 'user-1',
       senderName: '我',
       senderAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=me',
-      content: '好的没问题，老地方老时间。',
+      content: '哇，风景很美！我们明天还是老地方见吧？',
       type: 'text',
-      timestamp: new Date(Date.now() - 1000 * 60 * 6),
+      timestamp: new Date(Date.now() - 1000 * 60 * 7),
       isMine: true
     },
     {
@@ -154,8 +168,11 @@ export const mockMessages: Record<string, Message[]> = {
       senderId: 'user-1',
       senderName: '我',
       senderAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=me',
-      content: '文档链接发给你了，有问题随时问我。',
-      type: 'text',
+      content: '',
+      type: 'file',
+      fileName: '项目配置文档.pdf',
+      fileSize: 1567890,
+      fileUrl: '#',
       timestamp: new Date(Date.now() - 1000 * 60 * 31),
       isMine: true
     },

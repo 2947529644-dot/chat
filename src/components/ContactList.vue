@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import ContactCard from './ContactCard.vue'
 import { useChatStore } from '@/stores/chat'
+import { useSettingsStore } from '@/stores/settings'
 
 const chatStore = useChatStore()
+const settingsStore = useSettingsStore()
 </script>
 
 <template>
   <aside class="sidebar">
     <div class="sidebar-header">
       <h1 class="title">消息</h1>
-      <button class="new-btn" title="新建对话">
+      <button class="new-btn" title="新建对话" @click="settingsStore.openAddContact">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>

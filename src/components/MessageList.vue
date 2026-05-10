@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
 import { useChatStore } from '@/stores/chat'
-import MessageBubble from './MessageBubble.vue'
+import MediaMessage from './MediaMessage.vue'
+import MediaPreview from './MediaPreview.vue'
 
 const chatStore = useChatStore()
 const container = ref<HTMLElement | null>(null)
+
+const previewUrl = ref('')
+const previewType = ref<'image' | 'video'>('image')
 
 watch(
   () => chatStore.activeMessages.length,
@@ -25,16 +29,26 @@ watch(
     }
   }
 )
+
+function openPreview(url: string, type: 'image' | 'video') {
+  previewUrl.value = url
+  previewType.value = type
+}
+
+function closePreview() {
+  previewUrl.value = ''
+}
 </script>
 
 <template>
   <div ref="container" class="messages-container">
     <div class="messages">
-      <MessageBubble
+      <MediaMessage
         v-for="message in chatStore.activeMessages"
         :key="message.id"
         :message="message"
         :show-sender="chatStore.activeContact?.isGroup && !message.isMine"
+        @preview="openPreview"
       />
 
       <div v-if="chatStore.activeMessages.length === 0" class="empty">
@@ -47,6 +61,12 @@ watch(
         <p class="empty-text">发送一条消息开始对话</p>
       </div>
     </div>
+
+    <MediaPreview
+      :url="previewUrl"
+      :type="previewType"
+      @close="closePreview"
+    />
   </div>
 </template>
 

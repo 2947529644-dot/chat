@@ -19,10 +19,33 @@ export interface Message {
   type: 'text' | 'image' | 'video' | 'file'
   timestamp: Date
   isMine: boolean
+  isRead?: boolean
+  readAt?: Date
+  // Media message metadata
+  fileName?: string
+  fileSize?: number
+  fileUrl?: string
+  thumbnailUrl?: string
+}
+
+export interface UserSettings {
+  theme: 'light' | 'dark' | 'system'
+  fontSize: 'small' | 'medium' | 'large'
+  notifications: NotificationSettings
+}
+
+export interface NotificationSettings {
+  messageSound: boolean
+  desktopNotification: boolean
+  mentionAlert: boolean
 }
 
 export interface User {
   id: string
   name: string
   avatar: string
+  bio?: string
+  phone?: string
+  email?: string
+  location?: string
 }
